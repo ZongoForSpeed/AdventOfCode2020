@@ -13,7 +13,7 @@ public class Day05Test {
     public static long binaryBoarding(String boardingPasses) {
         long row = 0;
         long column = 0;
-        long id = 0;
+
         for (int i = 0; i < boardingPasses.length(); ++i) {
             switch (boardingPasses.charAt(i)) {
                 case 'F':
