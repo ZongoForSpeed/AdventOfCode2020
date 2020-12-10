@@ -60,23 +60,21 @@ public class Day10Test {
         adapters.add(0, 0L);
         adapters.add(adapters.get(adapters.size() - 1) + 3);
 
-        StringBuilder diffs = new StringBuilder();
+        Map<Long, Long> cache = new HashMap<>();
 
+        long result = 1;
+        long count = 0;
         for (int i = 1; i < adapters.size(); i++) {
             long diff = adapters.get(i) - adapters.get(i - 1);
             // LOGGER.info("{} diff {}-{}", diff, adapters.get(i), adapters.get(i - 1));
-            diffs.append(diff);
+            if (diff == 1) {
+                ++count;
+            } else {
+                result *= arrangements(count, cache);
+                count = 0;
+            }
         }
 
-        String[] split = diffs.toString().split("3");
-
-        Map<Long, Long> cache = new HashMap<>();
-
-        // LOGGER.info("diffs = {} : {}", diffs, split);
-        long result = 1;
-        for (String s : split) {
-            result *= arrangements(s.length(), cache);
-        }
         return result;
     }
 

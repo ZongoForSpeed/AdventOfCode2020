@@ -23,7 +23,6 @@ public class Day01Test {
 
     public static long reportRepair3(long[] report) {
         for (int i = 0; i < report.length; i++) {
-            long value = report[i];
             for (int j = i + 1; j < report.length; j++) {
                 if (report[i] + report[j] > 2020) {
                     continue;
