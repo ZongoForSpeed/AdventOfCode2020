@@ -317,7 +317,8 @@ public class Day11Test {
      * Also, people seem to be more tolerant than you expected: it now takes five
      * or more visible occupied seats for an occupied seat to become empty (rather
      * than four or more from the previous rules). The other rules still apply:
-     * empty seats that see no occupied seats become occupied, seats matching no rule don't change, and floor never changes.
+     * empty seats that see no occupied seats become occupied, seats matching no
+     * rule don't change, and floor never changes.
      * <p>
      * Given the same starting layout as above, these new rules cause the seating
      * area to shift around as follows:
@@ -398,9 +399,12 @@ public class Day11Test {
      * LLL###LLL#
      * #.LLLLL#.L
      * #.L#LL#.L#
-     * Again, at this point, people stop shifting around and the seating area reaches equilibrium. Once this occurs, you count 26 occupied seats.
+     * Again, at this point, people stop shifting around and the seating area
+     * reaches equilibrium. Once this occurs, you count 26 occupied seats.
      * <p>
-     * Given the new visibility method and the rule change for occupied seats becoming empty, once equilibrium is reached, how many seats end up occupied?
+     * Given the new visibility method and the rule change for occupied seats
+     * becoming empty, once equilibrium is reached, how many seats end up
+     * occupied?
      */
     @Test
     void inputSeatingSystem() throws IOException {
