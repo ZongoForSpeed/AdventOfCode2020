@@ -1,6 +1,7 @@
 package com.adventofcode;
 
 import com.adventofcode.maths.Arithmetic;
+import com.adventofcode.maths.Prime;
 import com.adventofcode.utils.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class Day13Test {
             ++remainder;
         }
 
-        long[] primes = Arithmetic.sieve(1_000_000);
+        long[] primes = Prime.sieve(1_000_000);
 
         long[] busArray = buses.stream().mapToLong(t -> t).toArray();
         long[] remaindersArray = remainders.stream().mapToLong(t -> t).toArray();

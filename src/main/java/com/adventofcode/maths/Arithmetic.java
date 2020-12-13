@@ -1,8 +1,6 @@
 package com.adventofcode.maths;
 
 import java.math.BigInteger;
-import java.util.BitSet;
-import java.util.stream.IntStream;
 
 public class Arithmetic {
     public static long chineseRemainderTheorem(long[] modulos, long[] reminders, long[] primes) {
@@ -55,20 +53,4 @@ public class Arithmetic {
         return BigInteger.valueOf(b).modPow(BigInteger.valueOf(e), BigInteger.valueOf(modulo)).longValue();
     }
 
-    public static long[] sieve(int size) {
-        BitSet test = new BitSet(size);
-        test.set(0, size - 1, true);
-        for (int p = 2; p * p < size; ++p) {
-            if (test.get(p)) {
-                for (int k = p * p; k < size; k += p) {
-                    test.set(k, false);
-                }
-            }
-        }
-
-        return IntStream.range(2, size)
-                .filter(test::get)
-                .mapToLong(t -> t)
-                .toArray();
-    }
 }
