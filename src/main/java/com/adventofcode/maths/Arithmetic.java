@@ -2,7 +2,9 @@ package com.adventofcode.maths;
 
 import java.math.BigInteger;
 
-public class Arithmetic {
+public final class Arithmetic {
+    private Arithmetic() {
+    }
     public static long chineseRemainderTheorem(long[] modulos, long[] reminders, long[] primes) {
         assert (modulos.length == reminders.length);
 

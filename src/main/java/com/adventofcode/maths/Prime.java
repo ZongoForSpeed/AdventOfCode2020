@@ -5,6 +5,9 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public final class Prime {
+    private Prime() {
+
+    }
 
     public static long[] sieve(int size) {
         BitSet test = new BitSet(size);

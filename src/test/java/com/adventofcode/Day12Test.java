@@ -171,31 +171,18 @@ public class Day12Test {
             char type = action.charAt(0);
             int value = Integer.parseInt(action.substring(1));
             switch (type) {
-                case 'N':
-                    y += value;
-                    break;
-                case 'S':
-                    y -= value;
-                    break;
-                case 'E':
-                    x += value;
-                    break;
-                case 'W':
-                    x -= value;
-                    break;
-                case 'L':
-                    direction = direction.turnLeft(value);
-                    break;
-                case 'R':
-                    direction = direction.turnRight(value);
-                    break;
-                case 'F':
+                case 'N' -> y += value;
+                case 'S' -> y -= value;
+                case 'E' -> x += value;
+                case 'W' -> x -= value;
+                case 'L' -> direction = direction.turnLeft(value);
+                case 'R' -> direction = direction.turnRight(value);
+                case 'F' -> {
                     Pair<Integer, Integer> move = direction.move(x, y, value);
                     x = move.getLeft();
                     y = move.getRight();
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action : " + type);
+                }
+                default -> throw new IllegalStateException("Unknown action : " + type);
             }
 
             return new Position(direction, x, y);
@@ -249,17 +236,7 @@ public class Day12Test {
             public abstract Pair<Integer, Integer> move(int x, int y, int n);
         }
 
-        private static class Position {
-            private final Direction d;
-            private final int x;
-            private final int y;
-
-            public Position(Direction d, int x, int y) {
-                this.d = d;
-                this.x = x;
-                this.y = y;
-            }
-
+        private static record Position(Direction d, int x, int y) {
             public Direction getD() {
                 return d;
             }
@@ -294,36 +271,25 @@ public class Day12Test {
             char type = action.charAt(0);
             int value = Integer.parseInt(action.substring(1));
             switch (type) {
-                case 'N':
-                    waypointY += value;
-                    break;
-                case 'S':
-                    waypointY -= value;
-                    break;
-                case 'E':
-                    waypointX += value;
-                    break;
-                case 'W':
-                    waypointX -= value;
-                    break;
-                case 'L': {
+                case 'N' -> waypointY += value;
+                case 'S' -> waypointY -= value;
+                case 'E' -> waypointX += value;
+                case 'W' -> waypointX -= value;
+                case 'L' -> {
                     Pair<Integer, Integer> waypoint = turnLeft(waypointX, waypointY, value);
                     waypointX = waypoint.getLeft();
                     waypointY = waypoint.getRight();
                 }
-                break;
-                case 'R': {
+                case 'R' -> {
                     Pair<Integer, Integer> waypoint = turnRight(waypointX, waypointY, value);
                     waypointX = waypoint.getLeft();
                     waypointY = waypoint.getRight();
                 }
-                break;
-                case 'F':
+                case 'F' -> {
                     x += waypointX * value;
                     y += waypointY * value;
-                    break;
-                default:
-                    throw new IllegalStateException("Unknown action : " + type);
+                }
+                default -> throw new IllegalStateException("Unknown action : " + type);
             }
 
             return new Position(x, y, waypointX, waypointY);
@@ -340,44 +306,24 @@ public class Day12Test {
         }
 
         private static Pair<Integer, Integer> turnLeft(int x, int y, int angle) {
-            switch (angle) {
-                case 90:
-                    return Pair.of(-y, x);
-                case 180:
-                    return Pair.of(-x, -y);
-                case 270:
-                    return Pair.of(y, -x);
-                default:
-                    throw new IllegalStateException("Cannot turn left : " + angle);
-            }
+            return switch (angle) {
+                case 90 -> Pair.of(-y, x);
+                case 180 -> Pair.of(-x, -y);
+                case 270 -> Pair.of(y, -x);
+                default -> throw new IllegalStateException("Cannot turn left : " + angle);
+            };
         }
 
         private static Pair<Integer, Integer> turnRight(int x, int y, int angle) {
-            switch (angle) {
-                case 90:
-                    return Pair.of(y, -x);
-                case 180:
-                    return Pair.of(-x, -y);
-                case 270:
-                    return Pair.of(-y, x);
-                default:
-                    throw new IllegalStateException("Cannot turn right : " + angle);
-            }
+            return switch (angle) {
+                case 90 -> Pair.of(y, -x);
+                case 180 -> Pair.of(-x, -y);
+                case 270 -> Pair.of(-y, x);
+                default -> throw new IllegalStateException("Cannot turn right : " + angle);
+            };
         }
 
-        private static class Position {
-            private final int x;
-            private final int y;
-            private final int waypointX;
-            private final int waypointY;
-
-            public Position(int x, int y, int waypointX, int waypointY) {
-                this.x = x;
-                this.y = y;
-                this.waypointX = waypointX;
-                this.waypointY = waypointY;
-            }
-
+        private static record Position(int x, int y, int waypointX, int waypointY) {
             public int getX() {
                 return x;
             }
@@ -392,16 +338,6 @@ public class Day12Test {
 
             public int getWaypointY() {
                 return waypointY;
-            }
-
-            @Override
-            public String toString() {
-                return "Position{" +
-                        "x=" + x +
-                        ", y=" + y +
-                        ", waypointX=" + waypointX +
-                        ", waypointY=" + waypointY +
-                        '}';
             }
         }
     }
