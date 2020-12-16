@@ -24,7 +24,7 @@ public class Day12Test {
 
         Part1.Position position = Part1.move(actions);
         LOGGER.info("Last position {}", position);
-        int manhattanDistance = Math.abs(position.getX()) + Math.abs(position.getY());
+        int manhattanDistance = Math.abs(position.x()) + Math.abs(position.y());
         assertThat(manhattanDistance).isEqualTo(25);
     }
 
@@ -38,7 +38,7 @@ public class Day12Test {
 
         Part2.Position position = Part2.move(actions);
         LOGGER.info("Last position {}", position);
-        int manhattanDistance = Math.abs(position.getX()) + Math.abs(position.getY());
+        int manhattanDistance = Math.abs(position.x()) + Math.abs(position.y());
         assertThat(manhattanDistance).isEqualTo(286);
     }
 
@@ -148,7 +148,7 @@ public class Day12Test {
 
         Part1.Position position = Part1.move(actions);
         LOGGER.info("Last position {}", position);
-        int manhattanDistance = Math.abs(position.getX()) + Math.abs(position.getY());
+        int manhattanDistance = Math.abs(position.x()) + Math.abs(position.y());
         assertThat(manhattanDistance).isEqualTo(590);
     }
 
@@ -158,15 +158,15 @@ public class Day12Test {
 
         Part2.Position position = Part2.move(actions);
         LOGGER.info("Last position {}", position);
-        int manhattanDistance = Math.abs(position.getX()) + Math.abs(position.getY());
+        int manhattanDistance = Math.abs(position.x()) + Math.abs(position.y());
         assertThat(manhattanDistance).isEqualTo(42013);
     }
 
     private static final class Part1 {
         private static Position move(Position position, String action) {
-            Direction direction = position.getD();
-            int x = position.getX();
-            int y = position.getY();
+            Direction direction = position.d();
+            int x = position.x();
+            int y = position.y();
 
             char type = action.charAt(0);
             int value = Integer.parseInt(action.substring(1));
@@ -237,18 +237,6 @@ public class Day12Test {
         }
 
         private static record Position(Direction d, int x, int y) {
-            public Direction getD() {
-                return d;
-            }
-
-            public int getX() {
-                return x;
-            }
-
-            public int getY() {
-                return y;
-            }
-
             @Override
             public String toString() {
                 return "Position{" +
@@ -262,11 +250,11 @@ public class Day12Test {
 
     private static final class Part2 {
         private static Position move(Position position, String action) {
-            int x = position.getX();
-            int y = position.getY();
+            int x = position.x();
+            int y = position.y();
 
-            int waypointX = position.getWaypointX();
-            int waypointY = position.getWaypointY();
+            int waypointX = position.waypointX();
+            int waypointY = position.waypointY();
 
             char type = action.charAt(0);
             int value = Integer.parseInt(action.substring(1));
@@ -324,21 +312,6 @@ public class Day12Test {
         }
 
         private static record Position(int x, int y, int waypointX, int waypointY) {
-            public int getX() {
-                return x;
-            }
-
-            public int getY() {
-                return y;
-            }
-
-            public int getWaypointX() {
-                return waypointX;
-            }
-
-            public int getWaypointY() {
-                return waypointY;
-            }
         }
     }
 }

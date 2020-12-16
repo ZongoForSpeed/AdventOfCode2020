@@ -331,16 +331,7 @@ public class Day16Test {
         assertThat(departure).isEqualTo(314360510573L);
     }
 
-    private static class SimpleRule implements IntPredicate {
-        private final int lowerBound;
-        private final int upperBound;
-
-        private SimpleRule(int lowerBound, int upperBound) {
-            this.lowerBound = lowerBound;
-            this.upperBound = upperBound;
-        }
-
-
+    private static record SimpleRule(int lowerBound, int upperBound) implements IntPredicate {
         @Override
         public String toString() {
             return "SimpleRule{" +
