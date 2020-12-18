@@ -4,6 +4,8 @@ import com.adventofcode.utils.FileUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Day07Test {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Day07Test.class);
     private static final Pattern PATTERN = Pattern.compile("(\\d+) (.*) bag");
 
     private static Pair<String, List<Pair<String, Integer>>> readRule(String rule) {
@@ -51,7 +54,7 @@ public class Day07Test {
                     r.getRight().stream().map(Pair::getLeft).forEach(c -> bags.computeIfAbsent(c, ignore -> new ArrayList<>()).add(color));
                 });
 
-        System.out.println(bags);
+        LOGGER.info("Bags {}", bags);
         Queue<String> queue = new ArrayDeque<>();
         queue.add("shiny gold");
 
@@ -109,7 +112,7 @@ public class Day07Test {
                 "faded blue bags contain no other bags.",
                 "dotted black bags contain no other bags.");
 
-        rules.forEach(s -> System.out.println(readRule(s)));
+        rules.forEach(s -> LOGGER.info("rule: {}", readRule(s)));
 
         assertThat(countShinyGold(rules)).isEqualTo(4);
 

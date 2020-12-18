@@ -192,7 +192,7 @@ public class Day12Test {
             Position position = new Position(Direction.EAST, 0, 0);
             for (String action : actions) {
                 position = move(position, action);
-                LOGGER.info("Position after move {}: {}", action, position);
+                LOGGER.debug("Position after move {}: {}", action, position);
             }
 
             return position;
@@ -287,7 +287,7 @@ public class Day12Test {
             Position position = new Position(0, 0, 10, 1);
             for (String action : actions) {
                 position = move(position, action);
-                LOGGER.info("Position after move {}: {}", action, position);
+                LOGGER.debug("Position after move {}: {}", action, position);
             }
 
             return position;

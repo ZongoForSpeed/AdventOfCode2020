@@ -27,25 +27,21 @@ public class Day08Test {
 
     Pair<Long, Boolean> runHandheldGameConsole(List<String> program) {
         List<Pair<String, Long>> commands = parseCommands(program);
-        // LOGGER.info("Commands = {}", commands);
+        LOGGER.debug("Commands = {}", commands);
         int position = 0;
         long accumulator = 0;
         Set<Integer> runCommands = new HashSet<>();
         while (position < commands.size()) {
             Pair<String, Long> command = commands.get(position);
-            // LOGGER.info("Running command {}", command);
+            LOGGER.trace("Running command {}", command);
             if (runCommands.add(position)) {
                 switch (command.getLeft()) {
-                    case "acc":
+                    case "acc" -> {
                         accumulator += command.getValue();
                         position++;
-                        break;
-                    case "jmp":
-                        position += command.getValue();
-                        break;
-                    case "nop":
-                        position++;
-                        break;
+                    }
+                    case "jmp" -> position += command.getValue();
+                    case "nop" -> position++;
                 }
             } else {
                 return Pair.of(accumulator, false);
