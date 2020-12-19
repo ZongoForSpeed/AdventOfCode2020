@@ -23,7 +23,7 @@ public class Day15Test {
         for (; n <= startingNumbers.length; ++n) {
             lastNumberSpoken = startingNumbers[n - 1];
 
-            // LOGGER.info("Turn {}, spoken number {}", n, lastNumberSpoken);
+            LOGGER.trace("Turn {}, spoken number {}", n, lastNumberSpoken);
 
             Integer last = lastMemory.put(lastNumberSpoken, n);
             newNumber = last == null;
@@ -38,7 +38,7 @@ public class Day15Test {
                 lastNumberSpoken = lastMemory.get(lastNumberSpoken) - previousMemory.get(lastNumberSpoken);
             }
 
-            // LOGGER.info("Turn {}, spoken number {}", n, lastNumberSpoken);
+            LOGGER.trace("Turn {}, spoken number {}", n, lastNumberSpoken);
 
             Integer last = lastMemory.put(lastNumberSpoken, n);
             newNumber = last == null;
@@ -47,6 +47,7 @@ public class Day15Test {
             }
         }
 
+        LOGGER.info("memoryGame({}, {}) = {}", input, turn, lastNumberSpoken);
         return lastNumberSpoken;
     }
 
