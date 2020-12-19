@@ -12,15 +12,58 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.StringJoiner;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Day19Test {
     private static final Logger LOGGER = LoggerFactory.getLogger(Day19Test.class);
 
-    private static long matchRules(List<String> lines, boolean addLoopRules) {
-        Map<Integer, Predicate<String>> rules = new HashMap<>();
+    private static String buildPattern(int rulesNumber, boolean addLoopRules, Map<Integer, String> rules, Map<Integer, String> cache) {
+        String pattern = cache.get(rulesNumber);
+        if (pattern != null) {
+            return pattern;
+        }
+
+        if (rulesNumber == 8 && addLoopRules) {
+            // 8: 42 | 42 8
+            String buildPattern = buildPattern(42, addLoopRules, rules, cache);
+            pattern = "(" + buildPattern + ")+";
+        } else if (rulesNumber == 11 && addLoopRules) {
+            // 11: 42 31 | 42 11 31
+            String buildPattern42 = buildPattern(42, addLoopRules, rules, cache);
+            String buildPattern31 = buildPattern(31, addLoopRules, rules, cache);
+            StringJoiner sj = new StringJoiner("|", "(", ")");
+            for (int i = 1; i < 10; ++i) {
+                sj.add(buildPattern42 + '{' + i + '}' + buildPattern31 + '{' + i + '}');
+            }
+            pattern = sj.toString();
+        } else {
+            String rule = rules.get(rulesNumber);
+            if (rule.startsWith("\"")) {
+                pattern = rule.replace("\"", "");
+            } else {
+                StringJoiner stringJoiner = new StringJoiner("|", "(", ")");
+
+                for (String s : rule.split(" \\| ")) {
+                    String collect = Arrays.stream(s.split(" "))
+                            .mapToInt(Integer::parseInt)
+                            .mapToObj(i -> buildPattern(i, addLoopRules, rules, cache))
+                            .collect(Collectors.joining());
+                    stringJoiner.add(collect);
+                }
+                pattern = stringJoiner.toString();
+            }
+        }
+
+        cache.put(rulesNumber, pattern);
+        return pattern;
+    }
+
+    private static long matchMonsterMessages(List<String> lines, boolean addLoopRules) {
+        Map<Integer, String> rules = new HashMap<>();
         List<String> messages = new ArrayList<>();
         boolean readRule = true;
         for (String line : lines) {
@@ -31,47 +74,44 @@ public class Day19Test {
 
             if (readRule) {
                 String[] s1 = line.split(": ");
-                int name = Integer.parseInt(s1[0]);
-
-                String rhs = s1[1];
-                if (rhs.startsWith("\"")) {
-                    String pattern = rhs.replace("\"", "");
-                    rules.put(name, new SimpleRule(pattern));
-                } else {
-                    List<Predicate<String>> compositeRules = new ArrayList<>();
-                    String[] s2 = rhs.split(" \\| ");
-                    for (String s : s2) {
-                        String[] s3 = s.split(" ");
-                        int[] ruleNumbers = Arrays.stream(s3).mapToInt(Integer::parseInt).toArray();
-                        compositeRules.add(new CompositeRule(rules, ruleNumbers));
-                    }
-
-                    rules.put(name, compositeRules.stream().reduce(Predicate::or).orElseThrow());
-                }
+                rules.put(Integer.parseInt(s1[0]), s1[1]);
             } else {
                 messages.add(line);
             }
         }
-        if (addLoopRules) {
-            rules.put(8, new CompositeRule(rules, new int[]{42}).or(new CompositeRule(rules, new int[]{42, 8})));
-            rules.put(11, new CompositeRule(rules, new int[]{42, 31}).or(new CompositeRule(rules, new int[]{42, 11, 31})));
-        }
+
         LOGGER.info("Rules: {}", rules);
         LOGGER.info("Messages: {}", messages);
-        Predicate<String> rule0 = rules.get(0);
+        Pattern pattern = Pattern.compile("^" + buildPattern(0, addLoopRules, rules, new HashMap<>()) + "$");
+        LOGGER.info("Pattern: '{}'", pattern);
         long count = 0;
         for (String message : messages) {
-            boolean test = rule0.test(message);
-            LOGGER.info("Test message '{}' : {}", message, test);
+            boolean test = pattern.matcher(message).find();
+            LOGGER.debug("Test message '{}' : {}", message, test);
             if (test) {
                 ++count;
             }
+
         }
         return count;
     }
 
     @Test
     void testMatchRules() {
+        List<String> simpleInput = List.of("0: 1 2",
+                "1: \"a\"",
+                "2: 1 3 | 3 1",
+                "3: \"b\"",
+                "",
+                "ab",
+                "aba",
+                "baba",
+                "bab",
+                "aab",
+                "aaa");
+
+        assertThat(matchMonsterMessages(simpleInput, false)).isEqualTo(2);
+
         List<String> input = List.of("0: 4 1 5",
                 "1: 2 3 | 3 2",
                 "2: 4 4 | 5 5",
@@ -85,7 +125,7 @@ public class Day19Test {
                 "aaabbb",
                 "aaaabbb");
 
-        assertThat(matchRules(input, false)).isEqualTo(2);
+        assertThat(matchMonsterMessages(input, false)).isEqualTo(2);
     }
 
     @Test
@@ -138,8 +178,9 @@ public class Day19Test {
                 "babaaabbbaaabaababbaabababaaab",
                 "aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba");
 
-        assertThat(matchRules(input, false)).isEqualTo(3);
-        assertThat(matchRules(input, true)).isEqualTo(12);
+        assertThat(matchMonsterMessages(input, false)).isEqualTo(3);
+        assertThat(matchMonsterMessages(input, true)).isEqualTo(12);
+
     }
 
     /**
@@ -325,82 +366,7 @@ public class Day19Test {
     void inputMatchRules() throws IOException {
         List<String> input = FileUtils.readLines("/day/19/input");
 
-        assertThat(matchRules(input, false)).isEqualTo(176);
-        assertThat(matchRules(input, true)).isEqualTo(352);
+        assertThat(matchMonsterMessages(input, false)).isEqualTo(176);
+        assertThat(matchMonsterMessages(input, true)).isEqualTo(352);
     }
-
-    private static record SimpleRule(String pattern) implements Predicate<String> {
-        @Override
-        public boolean test(String s) {
-            return pattern.equals(s);
-        }
-    }
-
-    private static class CompositeRule implements Predicate<String> {
-        private final Map<Integer, Predicate<String>> allRules;
-        private final int[] rules;
-        private final Map<String, Boolean> cache = new HashMap<>();
-
-        private CompositeRule(Map<Integer, Predicate<String>> allRules, int[] rules) {
-            this.allRules = allRules;
-            this.rules = rules;
-        }
-
-        @Override
-        public boolean test(String s) {
-            Boolean value = cache.get(s);
-            if (value != null) {
-                return value;
-            }
-
-            value = match(s);
-            cache.put(s, value);
-            return value;
-            // return cache.computeIfAbsent(s, this::match);
-        }
-
-        private boolean match(String s) {
-            switch (rules.length) {
-                case 1:
-                    return allRules.get(rules[0]).test(s);
-                case 2: {
-                    Predicate<String> r1 = allRules.get(rules[0]);
-                    Predicate<String> r2 = allRules.get(rules[1]);
-                    int length = s.length();
-                    for (int i = 1; i < length; ++i) {
-                        String s1 = s.substring(0, i);
-                        String s2 = s.substring(i);
-                        if (r1.test(s1) && r2.test(s2)) {
-                            return true;
-                        }
-                    }
-                }
-                break;
-                case 3: {
-                    Predicate<String> r1 = allRules.get(rules[0]);
-                    Predicate<String> r2 = allRules.get(rules[1]);
-                    Predicate<String> r3 = allRules.get(rules[2]);
-
-                    int length = s.length();
-                    for (int i = 1; i < length - 1; ++i) {
-                        String s1 = s.substring(0, i);
-                        if (r1.test(s1)) {
-                            for (int j = i + 1; j < length; ++j) {
-                                String s2 = s.substring(i, j);
-                                String s3 = s.substring(j);
-                                if (r2.test(s2) && r3.test(s3)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-                default:
-                    throw new IllegalStateException("Unmanaged rules size: " + Arrays.toString(rules));
-            }
-            return false;
-        }
-    }
-
 }
