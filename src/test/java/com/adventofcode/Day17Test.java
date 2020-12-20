@@ -1,5 +1,7 @@
 package com.adventofcode;
 
+import com.adventofcode.map.Point3D;
+import com.adventofcode.map.Point4D;
 import com.adventofcode.utils.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -17,68 +19,68 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Day17Test {
     private static final Logger LOGGER = LoggerFactory.getLogger(Day17Test.class);
 
-    private static Collection<Position> neighbors(Position p) {
+    private static Collection<Point3D> neighbors(Point3D p) {
         int x = p.x();
         int y = p.y();
         int z = p.z();
 
-        List<Position> result = new ArrayList<>();
+        List<Point3D> result = new ArrayList<>();
 
         for (int dx = -1; dx <= 1; ++dx)
             for (int dy = -1; dy <= 1; ++dy)
                 for (int dz = -1; dz <= 1; ++dz) {
                     if (dx != 0 || dy != 0 || dz != 0) {
-                        result.add(Position.of(x + dx, y + dy, z + dz));
+                        result.add(Point3D.of(x + dx, y + dy, z + dz));
                     }
                 }
         return result;
     }
 
-    private static Collection<HyperPosition> neighbors(HyperPosition p) {
+    private static Collection<Point4D> neighbors(Point4D p) {
         int x = p.x();
         int y = p.y();
         int z = p.z();
         int w = p.w();
 
-        List<HyperPosition> result = new ArrayList<>();
+        List<Point4D> result = new ArrayList<>();
 
         for (int dx = -1; dx <= 1; ++dx)
             for (int dy = -1; dy <= 1; ++dy)
                 for (int dz = -1; dz <= 1; ++dz)
                     for (int dw = -1; dw <= 1; ++dw) {
                         if (dx != 0 || dy != 0 || dz != 0 || dw != 0) {
-                            result.add(HyperPosition.of(x + dx, y + dy, z + dz, w + dw));
+                            result.add(Point4D.of(x + dx, y + dy, z + dz, w + dw));
                         }
                     }
         return result;
     }
 
     private static long runConwayCubes(List<String> initialState, int iteration) {
-        Set<Position> state = new HashSet<>();
+        Set<Point3D> state = new HashSet<>();
 
         for (int y = 0, initialStateSize = initialState.size(); y < initialStateSize; y++) {
             char[] line = initialState.get(y).toCharArray();
             for (int x = 0, lineLength = line.length; x < lineLength; x++) {
                 char c = line[x];
                 if (c == '#') {
-                    state.add(Position.of(x, y, 0));
+                    state.add(Point3D.of(x, y, 0));
                 }
             }
         }
 
         LOGGER.info("initialState: {}", state);
         for (int i = 1; i <= iteration; ++i) {
-            Set<Position> nextState = new HashSet<>();
-            int minX = state.stream().mapToInt(Position::x).min().orElseThrow();
-            int minY = state.stream().mapToInt(Position::y).min().orElseThrow();
-            int minZ = state.stream().mapToInt(Position::z).min().orElseThrow();
-            int maxX = state.stream().mapToInt(Position::x).max().orElseThrow();
-            int maxY = state.stream().mapToInt(Position::y).max().orElseThrow();
-            int maxZ = state.stream().mapToInt(Position::z).max().orElseThrow();
+            Set<Point3D> nextState = new HashSet<>();
+            int minX = state.stream().mapToInt(Point3D::x).min().orElseThrow();
+            int minY = state.stream().mapToInt(Point3D::y).min().orElseThrow();
+            int minZ = state.stream().mapToInt(Point3D::z).min().orElseThrow();
+            int maxX = state.stream().mapToInt(Point3D::x).max().orElseThrow();
+            int maxY = state.stream().mapToInt(Point3D::y).max().orElseThrow();
+            int maxZ = state.stream().mapToInt(Point3D::z).max().orElseThrow();
             for (int x = minX - 1; x <= maxX + 1; ++x) {
                 for (int y = minY - 1; y <= maxY + 1; ++y) {
                     for (int z = minZ - 1; z <= maxZ + 1; ++z) {
-                        Position position = Position.of(x, y, z);
+                        Point3D position = Point3D.of(x, y, z);
                         long count = neighbors(position).stream().filter(state::contains).count();
                         if (state.contains(position)) {
                             if (count == 2 || count == 3) {
@@ -98,34 +100,34 @@ public class Day17Test {
     }
 
     private static long runConwayHyperCubes(List<String> initialState, int iteration) {
-        Set<HyperPosition> state = new HashSet<>();
+        Set<Point4D> state = new HashSet<>();
 
         for (int y = 0, initialStateSize = initialState.size(); y < initialStateSize; y++) {
             char[] line = initialState.get(y).toCharArray();
             for (int x = 0, lineLength = line.length; x < lineLength; x++) {
                 char c = line[x];
                 if (c == '#') {
-                    state.add(HyperPosition.of(x, y, 0, 0));
+                    state.add(Point4D.of(x, y, 0, 0));
                 }
             }
         }
 
         LOGGER.info("initialState: {}", state);
         for (int i = 1; i <= iteration; ++i) {
-            Set<HyperPosition> nextState = new HashSet<>();
-            int minX = state.stream().mapToInt(HyperPosition::x).min().orElseThrow();
-            int minY = state.stream().mapToInt(HyperPosition::y).min().orElseThrow();
-            int minZ = state.stream().mapToInt(HyperPosition::z).min().orElseThrow();
-            int minW = state.stream().mapToInt(HyperPosition::w).min().orElseThrow();
-            int maxX = state.stream().mapToInt(HyperPosition::x).max().orElseThrow();
-            int maxY = state.stream().mapToInt(HyperPosition::y).max().orElseThrow();
-            int maxZ = state.stream().mapToInt(HyperPosition::z).max().orElseThrow();
-            int maxW = state.stream().mapToInt(HyperPosition::w).max().orElseThrow();
+            Set<Point4D> nextState = new HashSet<>();
+            int minX = state.stream().mapToInt(Point4D::x).min().orElseThrow();
+            int minY = state.stream().mapToInt(Point4D::y).min().orElseThrow();
+            int minZ = state.stream().mapToInt(Point4D::z).min().orElseThrow();
+            int minW = state.stream().mapToInt(Point4D::w).min().orElseThrow();
+            int maxX = state.stream().mapToInt(Point4D::x).max().orElseThrow();
+            int maxY = state.stream().mapToInt(Point4D::y).max().orElseThrow();
+            int maxZ = state.stream().mapToInt(Point4D::z).max().orElseThrow();
+            int maxW = state.stream().mapToInt(Point4D::w).max().orElseThrow();
             for (int x = minX - 1; x <= maxX + 1; ++x) {
                 for (int y = minY - 1; y <= maxY + 1; ++y) {
                     for (int z = minZ - 1; z <= maxZ + 1; ++z) {
                         for (int w = minW - 1; w <= maxW + 1; ++w) {
-                            HyperPosition position = HyperPosition.of(x, y, z, w);
+                            Point4D position = Point4D.of(x, y, z, w);
                             long count = neighbors(position).stream().filter(state::contains).count();
                             if (state.contains(position)) {
                                 if (count == 2 || count == 3) {
@@ -599,18 +601,5 @@ public class Day17Test {
 
         assertThat(runConwayCubes(initialState, 6)).isEqualTo(215);
         assertThat(runConwayHyperCubes(initialState, 6)).isEqualTo(1728);
-
-    }
-
-    private static record Position(int x, int y, int z) {
-        public static Position of(int x, int y, int z) {
-            return new Position(x, y, z);
-        }
-    }
-
-    private static record HyperPosition(int x, int y, int z, int w) {
-        public static HyperPosition of(int x, int y, int z, int w) {
-            return new HyperPosition(x, y, z, w);
-        }
     }
 }

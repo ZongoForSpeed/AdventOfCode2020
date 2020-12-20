@@ -59,7 +59,7 @@ public class Day16Test {
                     predicates.add(new SimpleRule(Integer.parseInt(r[0]), Integer.parseInt(r[1])));
                 }
                 Optional<IntPredicate> predicate = predicates.stream().reduce(IntPredicate::or);
-                rules.put(name, predicate.get());
+                rules.put(name, predicate.orElseThrow());
             } else if (readYourTicket) {
                 yourTicket = Arrays.stream(note.split(",")).mapToInt(Integer::parseInt).toArray();
             } else if (readNearbyTickets) {
