@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Day21Test {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Day20Test.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Day21Test.class);
     private static final Pattern FOOD_PATTERN = Pattern.compile("(.*) \\(contains (.*)\\)");
 
     @Test
