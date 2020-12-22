@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Day12Test {
     private static final Logger LOGGER = LoggerFactory.getLogger(Day12Test.class);
 
-    private static Day12Test.PositionWaypoint move(Day12Test.PositionWaypoint position, String action) {
+    private static PositionWaypoint move(PositionWaypoint position, String action) {
         int x = position.x();
         int y = position.y();
 
@@ -45,11 +45,11 @@ public class Day12Test {
             default -> throw new IllegalStateException("Unknown action : " + type);
         }
 
-        return new Day12Test.PositionWaypoint(x, y, waypointX, waypointY);
+        return new PositionWaypoint(x, y, waypointX, waypointY);
     }
 
-    private static Day12Test.PositionWaypoint moveWithWaypoint(List<String> actions) {
-        Day12Test.PositionWaypoint position = new Day12Test.PositionWaypoint(0, 0, 10, 1);
+    private static PositionWaypoint moveWithWaypoint(List<String> actions) {
+        PositionWaypoint position = new PositionWaypoint(0, 0, 10, 1);
         for (String action : actions) {
             position = move(position, action);
             LOGGER.debug("Position after move {}: {}", action, position);
@@ -76,8 +76,8 @@ public class Day12Test {
         };
     }
 
-    private static Day12Test.PositionDirection move(Day12Test.PositionDirection position, String action) {
-        Day12Test.Direction direction = position.d();
+    private static PositionDirection move(PositionDirection position, String action) {
+        Direction direction = position.d();
         int x = position.x();
         int y = position.y();
 
@@ -98,11 +98,11 @@ public class Day12Test {
             default -> throw new IllegalStateException("Unknown action : " + type);
         }
 
-        return new Day12Test.PositionDirection(direction, x, y);
+        return new PositionDirection(direction, x, y);
     }
 
-    private static Day12Test.PositionDirection moveWithDirection(List<String> actions) {
-        Day12Test.PositionDirection position = new Day12Test.PositionDirection(Day12Test.Direction.EAST, 0, 0);
+    private static PositionDirection moveWithDirection(List<String> actions) {
+        PositionDirection position = new PositionDirection(Direction.EAST, 0, 0);
         for (String action : actions) {
             position = move(position, action);
             LOGGER.debug("Position after move {}: {}", action, position);
