@@ -1,5 +1,7 @@
 package com.adventofcode;
 
+import com.adventofcode.memory.Memory;
+import com.adventofcode.memory.ObjectMemory;
 import com.adventofcode.utils.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -21,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Day19Test {
     private static final Logger LOGGER = LoggerFactory.getLogger(Day19Test.class);
 
-    private static String buildPattern(int rulesNumber, boolean addLoopRules, Map<Integer, String> rules, Map<Integer, String> cache) {
+    private static String buildPattern(int rulesNumber, boolean addLoopRules, Memory<String> rules, Memory<String> cache) {
         String pattern = cache.get(rulesNumber);
         if (pattern != null) {
             return pattern;
@@ -63,7 +65,7 @@ public class Day19Test {
     }
 
     private static long matchMonsterMessages(List<String> lines, boolean addLoopRules) {
-        Map<Integer, String> rules = new HashMap<>();
+        Memory<String> rules = new ObjectMemory<>();
         List<String> messages = new ArrayList<>();
         boolean readRule = true;
         for (String line : lines) {
@@ -82,7 +84,7 @@ public class Day19Test {
 
         LOGGER.info("Rules: {}", rules);
         LOGGER.info("Messages: {}", messages);
-        Pattern pattern = Pattern.compile("^" + buildPattern(0, addLoopRules, rules, new HashMap<>()) + "$");
+        Pattern pattern = Pattern.compile("^" + buildPattern(0, addLoopRules, rules, new ObjectMemory<>()) + "$");
         LOGGER.info("Pattern: '{}'", pattern);
         long count = 0;
         for (String message : messages) {
