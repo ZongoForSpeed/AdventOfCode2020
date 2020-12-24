@@ -597,7 +597,7 @@ public class Day22Test {
      */
     @Test
     void inputCrabCombat() {
-        Scanner scanner = new Scanner(Day21Test.class.getResourceAsStream("/day/22/input"));
+        Scanner scanner = new Scanner(Day22Test.class.getResourceAsStream("/day/22/input"));
 
         long point = playCrabCombat(scanner);
         assertThat(point).isEqualTo(33393);
