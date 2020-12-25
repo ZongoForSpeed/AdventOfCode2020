@@ -13,8 +13,8 @@ public class Day15Test {
     private static final Logger LOGGER = LoggerFactory.getLogger(Day15Test.class);
 
     long memoryGame(String input, int turn) {
-        IntMemory lastMemory = new IntMemory();
-        IntMemory previousMemory = new IntMemory();
+        IntMemory lastMemory = new IntMemory(turn * 2);
+        IntMemory previousMemory = new IntMemory(turn * 2);
 
         int[] startingNumbers = Arrays.stream(input.split(",")).mapToInt(Integer::parseInt).toArray();
         int n = 1;
